@@ -21,7 +21,7 @@ import {
   ItemDescription,
   ItemTitle,
 } from "./ui/item";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "./ui/empty";
 
 export const SecurePostViewer: React.FC = () => {
@@ -34,6 +34,8 @@ export const SecurePostViewer: React.FC = () => {
   const [created, setCreated] = useState<Date | null>(null);
   const [user, setUser] = useState<string[] | null>(null);
 
+  const location = useLocation();
+
   const { cid } = useParams();
 
   const domain = "blockflow.co.uk";
@@ -42,7 +44,7 @@ export const SecurePostViewer: React.FC = () => {
 
   // extract password from URL (?pw=...)
   function getPasswordFromUrl(): string | null {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     return params.get("pw");
   }
 
@@ -156,9 +158,11 @@ export const SecurePostViewer: React.FC = () => {
   }
 
   return (
-    <Card>
+    <Card className="mx-auto w-full">
       <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle>Document: {cid}</CardTitle>
+        <CardTitle className="flex" style={{ textWrap: "wrap" }}>
+          {cid}
+        </CardTitle>
         <CardAction className="self-start sm:self-auto">
           <Item variant="outline">
             <ItemContent>
@@ -168,11 +172,10 @@ export const SecurePostViewer: React.FC = () => {
                 </ItemTitle>
               )}
               <ItemDescription>
-                {verified &&
-                  "Signed by: " +
-                    user?.join(", ") +
-                    " at " +
-                    created?.toLocaleString()}
+                {verified && "Signed by: " + user?.join(", ")}
+              </ItemDescription>
+              <ItemDescription>
+                {verified && "Signed at: " + created?.toLocaleString()}
               </ItemDescription>
             </ItemContent>
             <ItemActions>
@@ -193,7 +196,7 @@ export const SecurePostViewer: React.FC = () => {
         </CardAction>
       </CardHeader>
       <CardContent className="text-base">
-        {needsPassword && (
+        {needsPassword && !verified && (
           <div>
             <p>🔒 Encrypted post</p>
 
