@@ -1,14 +1,14 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { SecurePostViewer } from "./components/postViewer";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/:cid" element={<SecurePostViewer />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
